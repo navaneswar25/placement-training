@@ -1,0 +1,676 @@
+                                                                 Easy
+
+1. Defanging an IP Address
+
+class Solution {
+    public String defangIPaddr(String address) {
+        return address.replace(".", "[.]");
+    }
+}
+
+2. Shuffle String
+
+class Solution {
+    public String restoreString(String s, int[] indices) {
+
+        char[] ans = new char[s.length()];
+
+        for (int i = 0; i < s.length(); i++)
+            ans[indices[i]] = s.charAt(i);
+
+        return new String(ans);
+    }
+}
+
+3. Goal Parser Interpretation
+
+"G" → "G"
+"()" → "o"
+"(al)" → "al"
+class Solution {
+    public String interpret(String command) {
+
+        return command.replace("()", "o").replace("(al)", "al");
+    }
+}
+
+4. Count Items Matching a Rule
+
+import java.util.*;
+
+class Solution {
+    public int countMatches(List<List<String>> items, String ruleKey, String ruleValue) {
+
+        int index = 0;
+
+        if (ruleKey.equals("color"))
+            index = 1;
+        else if (ruleKey.equals("name"))
+            index = 2;
+
+        int count = 0;
+
+        for (List<String> item : items)
+            if (item.get(index).equals(ruleValue))
+                count++;
+
+        return count;
+    }
+}
+
+5. Sorting the Sentence
+
+class Solution {
+    public String sortSentence(String s) {
+
+        String[] words = s.split(" ");
+        String[] ans = new String[words.length];
+
+        for (String word : words) {
+
+            int index = word.charAt(word.length() - 1) - '1';
+            ans[index] = word.substring(0, word.length() - 1);
+        }
+
+        return String.join(" ", ans);
+    }
+}
+
+6. Check if Two Strings are Equivalent
+
+class Solution {
+    public boolean arrayStringsAreEqual(String[] word1, String[] word2) {
+
+        return String.join("", word1).equals(String.join("", word2));
+    }
+}
+
+7. To Lower Case
+
+class Solution {
+    public String toLowerCase(String s) {
+
+        return s.toLowerCase();
+    }
+}
+
+8. Determine if String Halves Are Alike
+
+class Solution {
+    public boolean halvesAreAlike(String s) {
+
+        String vowels = "aeiouAEIOU";
+
+        int count = 0;
+        int n = s.length();
+
+        for (int i = 0; i < n / 2; i++)
+            if (vowels.indexOf(s.charAt(i)) != -1)
+                count++;
+
+        for (int i = n / 2; i < n; i++)
+            if (vowels.indexOf(s.charAt(i)) != -1)
+                count--;
+
+        return count == 0;
+    }
+}
+
+9. Decrypt String from Alphabet to Integer Mapping
+
+class Solution {
+    public String freqAlphabets(String s) {
+
+        StringBuilder ans = new StringBuilder();
+
+        for (int i = 0; i < s.length(); i++) {
+
+            if (i + 2 < s.length() && s.charAt(i + 2) == '#') {
+
+                int num = Integer.parseInt(s.substring(i, i + 2));
+                ans.append((char) ('a' + num - 1));
+                i += 2;
+
+            } else {
+
+                ans.append((char) ('a' + (s.charAt(i) - '0') - 1));
+            }
+        }
+
+        return ans.toString();
+    }
+}
+
+10. Number of Strings That Appear as Substrings in Word
+
+class Solution {
+    public int numOfStrings(String[] patterns, String word) {
+
+        int count = 0;
+
+        for (String s : patterns)
+            if (word.contains(s))
+                count++;
+
+        return count;
+    }
+}
+
+11. Robot Return to Origin
+
+class Solution {
+    public boolean judgeCircle(String moves) {
+
+        int x = 0, y = 0;
+
+        for (char c : moves.toCharArray()) {
+
+            if (c == 'U')
+                y++;
+            else if (c == 'D')
+                y--;
+            else if (c == 'L')
+                x--;
+            else
+                x++;
+        }
+
+        return x == 0 && y == 0;
+    }
+}
+
+12. Reverse Words in a String III
+
+class Solution {
+    public String reverseWords(String s) {
+
+        String[] words = s.split(" ");
+        StringBuilder ans = new StringBuilder();
+
+        for (String word : words) {
+
+            ans.append(new StringBuilder(word).reverse()).append(" ");
+        }
+
+        return ans.toString().trim();
+    }
+}
+
+
+                                                                     Medium
+
+
+1. Jump Game VII
+
+class Solution {
+    public boolean canReach(String s, int minJump, int maxJump) {
+
+        int n = s.length();
+        boolean[] dp = new boolean[n];
+        dp[0] = true;
+
+        int reachable = 0;
+
+        for (int i = 1; i < n; i++) {
+
+            if (i >= minJump && dp[i - minJump])
+                reachable++;
+
+            if (i > maxJump && dp[i - maxJump - 1])
+                reachable--;
+
+            dp[i] = reachable > 0 && s.charAt(i) == '0';
+        }
+
+        return dp[n - 1];
+    }
+}
+
+2. Split Two Strings to Make Palindrome
+
+class Solution {
+
+    public boolean checkPalindromeFormation(String a, String b) {
+        return check(a, b) || check(b, a);
+    }
+
+    private boolean check(String a, String b) {
+
+        int i = 0, j = a.length() - 1;
+
+        while (i < j && a.charAt(i) == b.charAt(j)) {
+            i++;
+            j--;
+        }
+
+        return isPalindrome(a, i, j) || isPalindrome(b, i, j);
+    }
+
+    private boolean isPalindrome(String s, int i, int j) {
+
+        while (i < j)
+            if (s.charAt(i++) != s.charAt(j--))
+                return false;
+
+        return true;
+    }
+}
+
+3. Number of Ways to Split a String
+
+class Solution {
+
+    public int numWays(String s) {
+
+        int MOD = 1000000007;
+        int ones = 0;
+
+        for (char c : s.toCharArray())
+            if (c == '1')
+                ones++;
+
+        if (ones % 3 != 0)
+            return 0;
+
+        if (ones == 0) {
+            long n = s.length() - 1;
+            return (int) ((n * (n - 1) / 2) % MOD);
+        }
+
+        int k = ones / 3;
+        long first = 0, second = 0;
+        int count = 0;
+
+        for (char c : s.toCharArray()) {
+            if (c == '1')
+                count++;
+            if (count == k)
+                first++;
+            else if (count == k + 1)
+                break;
+        }
+
+        count = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            if (s.charAt(i) == '1')
+                count++;
+            if (count == k)
+                second++;
+            else if (count == k + 1)
+                break;
+        }
+
+        return (int) ((first * second) % MOD);
+    }
+}
+
+4. Sentence Similarity III
+
+class Solution {
+
+    public boolean areSentencesSimilar(String s1, String s2) {
+
+        String[] a = s1.split(" ");
+        String[] b = s2.split(" ");
+
+        if (a.length > b.length)
+            return areSentencesSimilar(s2, s1);
+
+        int i = 0;
+
+        while (i < a.length && a[i].equals(b[i]))
+            i++;
+
+        int j = 0;
+
+        while (j < a.length - i &&
+               a[a.length - 1 - j].equals(b[b.length - 1 - j]))
+            j++;
+
+        return i + j == a.length;
+    }
+}
+
+5. Repeated String Match
+
+class Solution {
+
+    public int repeatedStringMatch(String a, String b) {
+
+        StringBuilder sb = new StringBuilder();
+        int count = 0;
+
+        while (sb.length() < b.length()) {
+            sb.append(a);
+            count++;
+        }
+
+        if (sb.indexOf(b) != -1)
+            return count;
+
+        sb.append(a);
+
+        if (sb.indexOf(b) != -1)
+            return count + 1;
+
+        return -1;
+    }
+}
+
+6. Next Greater Element III
+
+class Solution {
+
+    public int nextGreaterElement(int n) {
+
+        char[] arr = String.valueOf(n).toCharArray();
+
+        int i = arr.length - 2;
+
+        while (i >= 0 && arr[i] >= arr[i + 1])
+            i--;
+
+        if (i < 0)
+            return -1;
+
+        int j = arr.length - 1;
+
+        while (arr[j] <= arr[i])
+            j--;
+
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+
+        int l = i + 1, r = arr.length - 1;
+
+        while (l < r) {
+            temp = arr[l];
+            arr[l++] = arr[r];
+            arr[r--] = temp;
+        }
+
+        try {
+            return Integer.parseInt(new String(arr));
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+}
+
+7. Maximum Number of Removable Characters
+
+class Solution {
+
+    public int maximumRemovals(String s, String p, int[] removable) {
+
+        int low = 0, high = removable.length;
+
+        while (low < high) {
+
+            int mid = (low + high + 1) / 2;
+
+            if (check(s, p, removable, mid))
+                low = mid;
+            else
+                high = mid - 1;
+        }
+
+        return low;
+    }
+
+    private boolean check(String s, String p, int[] removable, int k) {
+
+        boolean[] removed = new boolean[s.length()];
+
+        for (int i = 0; i < k; i++)
+            removed[removable[i]] = true;
+
+        int j = 0;
+
+        for (int i = 0; i < s.length() && j < p.length(); i++) {
+
+            if (!removed[i] && s.charAt(i) == p.charAt(j))
+                j++;
+        }
+
+        return j == p.length();
+    }
+}
+
+8. Swap Adjacent in LR String
+
+class Solution {
+
+    public boolean canTransform(String start, String end) {
+
+        if (!start.replace("X", "").equals(end.replace("X", "")))
+            return false;
+
+        int i = 0, j = 0;
+
+        while (i < start.length() && j < end.length()) {
+
+            while (i < start.length() && start.charAt(i) == 'X')
+                i++;
+
+            while (j < end.length() && end.charAt(j) == 'X')
+                j++;
+
+            if (i == start.length() || j == end.length())
+                break;
+
+            if (start.charAt(i) == 'L' && i < j)
+                return false;
+
+            if (start.charAt(i) == 'R' && i > j)
+                return false;
+
+            i++;
+            j++;
+        }
+
+        return true;
+    }
+}
+
+9. Multiply Strings
+
+class Solution {
+
+    public String multiply(String num1, String num2) {
+
+        if (num1.equals("0") || num2.equals("0"))
+            return "0";
+
+        int m = num1.length();
+        int n = num2.length();
+
+        int[] ans = new int[m + n];
+
+        for (int i = m - 1; i >= 0; i--) {
+
+            for (int j = n - 1; j >= 0; j--) {
+
+                int mul = (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
+                int sum = mul + ans[i + j + 1];
+
+                ans[i + j + 1] = sum % 10;
+                ans[i + j] += sum / 10;
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int num : ans)
+            if (!(sb.length() == 0 && num == 0))
+                sb.append(num);
+
+        return sb.toString();
+    }
+}
+
+
+                                                                  Hard
+
+
+1. Valid Number
+
+class Solution {
+    public boolean isNumber(String s) {
+        s = s.trim();
+
+        boolean num = false;
+        boolean exp = false;
+        boolean dot = false;
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+
+            if (Character.isDigit(c)) {
+                num = true;
+            } else if (c == '.') {
+                if (dot || exp)
+                    return false;
+                dot = true;
+            } else if (c == 'e' || c == 'E') {
+                if (exp || !num)
+                    return false;
+                exp = true;
+                num = false;
+            } else if (c == '+' || c == '-') {
+                if (i != 0 && s.charAt(i - 1) != 'e' && s.charAt(i - 1) != 'E')
+                    return false;
+            } else {
+                return false;
+            }
+        }
+
+        return num;
+    }
+}
+
+2. Regular Expression Matching
+
+class Solution {
+
+    public boolean isMatch(String s, String p) {
+
+        int m = s.length();
+        int n = p.length();
+
+        boolean[][] dp = new boolean[m + 1][n + 1];
+        dp[0][0] = true;
+
+        for (int j = 2; j <= n; j++)
+            if (p.charAt(j - 1) == '*')
+                dp[0][j] = dp[0][j - 2];
+
+        for (int i = 1; i <= m; i++) {
+
+            for (int j = 1; j <= n; j++) {
+
+                char pc = p.charAt(j - 1);
+
+                if (pc == '.' || pc == s.charAt(i - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else if (pc == '*') {
+
+                    dp[i][j] = dp[i][j - 2];
+
+                    char prev = p.charAt(j - 2);
+
+                    if (prev == '.' || prev == s.charAt(i - 1))
+                        dp[i][j] |= dp[i - 1][j];
+                }
+            }
+        }
+
+        return dp[m][n];
+    }
+}
+
+3. Last Substring in Lexicographical Order
+
+class Solution {
+
+    public String lastSubstring(String s) {
+
+        int i = 0;
+        int j = 1;
+        int k = 0;
+        int n = s.length();
+
+        while (j + k < n) {
+
+            if (s.charAt(i + k) == s.charAt(j + k)) {
+                k++;
+            } else if (s.charAt(i + k) < s.charAt(j + k)) {
+                i = Math.max(i + k + 1, j);
+                j = i + 1;
+                k = 0;
+            } else {
+                j = j + k + 1;
+                k = 0;
+            }
+        }
+
+        return s.substring(i);
+    }
+}
+
+4. Basic Calculator
+
+import java.util.*;
+
+class Solution {
+
+    public int calculate(String s) {
+
+        Stack<Integer> stack = new Stack<>();
+
+        int result = 0;
+        int number = 0;
+        int sign = 1;
+
+        for (int i = 0; i < s.length(); i++) {
+
+            char c = s.charAt(i);
+
+            if (Character.isDigit(c)) {
+
+                number = number * 10 + (c - '0');
+
+            } else if (c == '+') {
+
+                result += sign * number;
+                number = 0;
+                sign = 1;
+
+            } else if (c == '-') {
+
+                result += sign * number;
+                number = 0;
+                sign = -1;
+
+            } else if (c == '(') {
+
+                stack.push(result);
+                stack.push(sign);
+                result = 0;
+                sign = 1;
+
+            } else if (c == ')') {
+
+                result += sign * number;
+                number = 0;
+
+                result *= stack.pop();
+                result += stack.pop();
+            }
+        }
+
+        result += sign * number;
+        return result;
+    }
+}
