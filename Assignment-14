@@ -1,0 +1,430 @@
+                                                      Important Topics
+
+1. Object Oriented Paradigms (GFG)
+
+class Student {
+
+    private String name;
+
+    Student(String name) {
+        this.name = name;
+    }
+
+    void display() {
+        System.out.println("Student Name: " + name);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Student s = new Student("John");
+        s.display();
+    }
+}
+
+
+2. Constructors in Java (GFG)
+
+class Student {
+
+    String name;
+    int age;
+
+    Student() {
+        name = "Unknown";
+        age = 0;
+    }
+
+    Student(String n, int a) {
+        name = n;
+        age = a;
+    }
+
+    void display() {
+        System.out.println(name + " " + age);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Student s1 = new Student();
+        Student s2 = new Student("Alice", 20);
+
+        s1.display();
+        s2.display();
+    }
+}
+
+
+3. Constructor Chaining in Java (GFG)
+
+class Student {
+
+    Student() {
+        this(101);
+        System.out.println("Default Constructor");
+    }
+
+    Student(int id) {
+        this(id, "John");
+        System.out.println("One Parameter Constructor");
+    }
+
+    Student(int id, String name) {
+        System.out.println("ID = " + id);
+        System.out.println("Name = " + name);
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        new Student();
+    }
+}
+
+
+4. Inheritance in Java (GFG)
+
+class Animal {
+
+    void sound() {
+        System.out.println("Animal makes sound");
+    }
+}
+
+class Dog extends Animal {
+
+    void bark() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Dog d = new Dog();
+
+        d.sound();
+        d.bark();
+    }
+}
+
+
+5. Overriding in Java (GFG)
+
+class Animal {
+
+    void sound() {
+        System.out.println("Animal Sound");
+    }
+}
+
+class Dog extends Animal {
+
+    @Override
+    void sound() {
+        System.out.println("Dog Bark");
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Animal obj = new Dog();
+
+        obj.sound();
+    }
+}
+
+
+6. Abstraction in Java (GFG)
+
+abstract class Shape {
+
+    abstract void draw();
+
+    void display() {
+        System.out.println("Shape Class");
+    }
+}
+
+class Circle extends Shape {
+
+    @Override
+    void draw() {
+        System.out.println("Drawing Circle");
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Shape s = new Circle();
+
+        s.display();
+        s.draw();
+    }
+}
+
+
+                                                          Interview Questions
+
+1. Can we declare main() method as private, protected, or with no access modifier in Java?
+
+public class Main {
+
+    public static void main(String[] args) {
+        System.out.println("Main Method");
+    }
+}
+Incorrect (Runtime Error)
+public class Main {
+
+    private static void main(String[] args) {
+        System.out.println("Main Method");
+    }
+}
+
+
+2. Difference Between Method Overloading and Method Overriding (GFG)
+
+Method Overloading
+class Calculator {
+
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Calculator c = new Calculator();
+
+        System.out.println(c.add(5, 10));
+        System.out.println(c.add(5, 10, 15));
+    }
+}
+Method Overriding
+class Animal {
+
+    void sound() {
+        System.out.println("Animal Sound");
+    }
+}
+
+class Dog extends Animal {
+
+    @Override
+    void sound() {
+        System.out.println("Dog Barks");
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Animal obj = new Dog();
+        obj.sound();
+    }
+}
+
+
+3. Can we declare interface members as private or protected in Java 8?
+
+In Java 8:
+
+Methods are public abstract by default.
+default and static methods are allowed.
+private methods are not allowed (they were introduced in Java 9).
+protected methods are not allowed.
+Valid Java 8 Interface
+interface Demo {
+
+    void display();
+
+    default void show() {
+        System.out.println("Default Method");
+    }
+
+    static void print() {
+        System.out.println("Static Method");
+    }
+}
+
+
+4. Can we override a private or static method in Java?
+
+Private Method Example
+class Parent {
+
+    private void show() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+
+    void show() {
+        System.out.println("Child");
+    }
+}
+Static Method Hiding
+class Parent {
+
+    static void display() {
+        System.out.println("Parent");
+    }
+}
+
+class Child extends Parent {
+
+    static void display() {
+        System.out.println("Child");
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Parent obj = new Child();
+        obj.display();
+    }
+}
+
+Output:
+
+Parent
+
+
+5. What is the Diamond Problem in Java?
+
+Example
+interface A {
+
+    default void show() {
+        System.out.println("Interface A");
+    }
+}
+
+interface B {
+
+    default void show() {
+        System.out.println("Interface B");
+    }
+}
+
+class Test implements A, B {
+
+    @Override
+    public void show() {
+        System.out.println("Diamond Problem Resolved");
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        Test t = new Test();
+        t.show();
+    }
+}
+
+
+                                                       Practice Problems
+
+1. Inheritance I (HackerRank)
+
+class Animal {
+    void walk() {
+        System.out.println("I am walking");
+    }
+}
+
+class Bird extends Animal {
+
+    void fly() {
+        System.out.println("I am flying");
+    }
+
+    void sing() {
+        System.out.println("I am singing");
+    }
+}
+
+
+2. Inheritance II (HackerRank)
+
+class Arithmetic {
+
+    int add(int a, int b) {
+        return a + b;
+    }
+}
+
+class Adder extends Arithmetic {
+
+}
+
+
+3. Java Abstract Class (HackerRank)
+
+abstract class Book {
+
+    String title;
+
+    abstract void setTitle(String s);
+
+    String getTitle() {
+        return title;
+    }
+}
+
+class MyBook extends Book {
+
+    @Override
+    void setTitle(String s) {
+        title = s;
+    }
+}
+
+
+4. Interface (HackerRank)
+
+interface AdvancedArithmetic {
+
+    int divisorSum(int n);
+}
+
+class MyCalculator implements AdvancedArithmetic {
+
+    @Override
+    public int divisorSum(int n) {
+
+        int sum = 0;
+
+        for (int i = 1; i <= n; i++) {
+
+            if (n % i == 0)
+                sum += i;
+        }
+
+        return sum;
+    }
+}
