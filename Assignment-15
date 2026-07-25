@@ -1,0 +1,653 @@
+                                                          Easy
+
+1. Convert Binary Number in a Linked List to Integer (LeetCode)
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public int getDecimalValue(ListNode head) {
+
+        int ans = 0;
+
+        while (head != null) {
+            ans = ans * 2 + head.val;
+            head = head.next;
+        }
+
+        return ans;
+    }
+}
+
+
+2. Reverse Linked List (LeetCode)
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseList(ListNode head) {
+
+        ListNode prev = null;
+        ListNode curr = head;
+
+        while (curr != null) {
+
+            ListNode next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        return prev;
+    }
+}
+
+
+3. Middle of the Linked List (LeetCode)
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode middleNode(ListNode head) {
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast != null && fast.next != null) {
+
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow;
+    }
+}
+
+
+4. Merge Two Sorted Lists (LeetCode)
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+
+        ListNode dummy = new ListNode(-1);
+        ListNode curr = dummy;
+
+        while (list1 != null && list2 != null) {
+
+            if (list1.val <= list2.val) {
+                curr.next = list1;
+                list1 = list1.next;
+            } else {
+                curr.next = list2;
+                list2 = list2.next;
+            }
+
+            curr = curr.next;
+        }
+
+        if (list1 != null)
+            curr.next = list1;
+
+        if (list2 != null)
+            curr.next = list2;
+
+        return dummy.next;
+    }
+}
+
+
+5. Delete Node in a Linked List (LeetCode)
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public void deleteNode(ListNode node) {
+
+        node.val = node.next.val;
+        node.next = node.next.next;
+    }
+}
+
+
+                                                                  Medium
+
+1. Design Twitter (LeetCode)
+
+import java.util.*;
+
+class Twitter {
+
+    private static int time = 0;
+
+    class Tweet {
+        int id, time;
+        Tweet next;
+
+        Tweet(int id) {
+            this.id = id;
+            this.time = Twitter.time++;
+        }
+    }
+
+    class User {
+        int id;
+        Set<Integer> followed;
+        Tweet tweetHead;
+
+        User(int id) {
+            this.id = id;
+            followed = new HashSet<>();
+            follow(id);
+        }
+
+        void follow(int id) {
+            followed.add(id);
+        }
+
+        void unfollow(int id) {
+            if (id != this.id)
+                followed.remove(id);
+        }
+
+        void post(int tweetId) {
+            Tweet t = new Tweet(tweetId);
+            t.next = tweetHead;
+            tweetHead = t;
+        }
+    }
+
+    Map<Integer, User> userMap;
+
+    public Twitter() {
+        userMap = new HashMap<>();
+    }
+
+    public void postTweet(int userId, int tweetId) {
+
+        userMap.putIfAbsent(userId, new User(userId));
+        userMap.get(userId).post(tweetId);
+    }
+
+    public List<Integer> getNewsFeed(int userId) {
+
+        List<Integer> res = new ArrayList<>();
+
+        if (!userMap.containsKey(userId))
+            return res;
+
+        Set<Integer> users = userMap.get(userId).followed;
+
+        PriorityQueue<Tweet> pq = new PriorityQueue<>((a, b) -> b.time - a.time);
+
+        for (int id : users) {
+            Tweet t = userMap.containsKey(id) ? userMap.get(id).tweetHead : null;
+            if (t != null)
+                pq.offer(t);
+        }
+
+        while (!pq.isEmpty() && res.size() < 10) {
+
+            Tweet t = pq.poll();
+            res.add(t.id);
+
+            if (t.next != null)
+                pq.offer(t.next);
+        }
+
+        return res;
+    }
+
+    public void follow(int followerId, int followeeId) {
+
+        userMap.putIfAbsent(followerId, new User(followerId));
+        userMap.putIfAbsent(followeeId, new User(followeeId));
+
+        userMap.get(followerId).follow(followeeId);
+    }
+
+    public void unfollow(int followerId, int followeeId) {
+
+        if (userMap.containsKey(followerId))
+            userMap.get(followerId).unfollow(followeeId);
+    }
+}
+
+
+2. Design Linked List (LeetCode)
+
+class MyLinkedList {
+
+    class Node {
+        int val;
+        Node next;
+
+        Node(int val) {
+            this.val = val;
+        }
+    }
+
+    Node head;
+    int size = 0;
+
+    public MyLinkedList() {}
+
+    public int get(int index) {
+
+        if (index < 0 || index >= size)
+            return -1;
+
+        Node curr = head;
+
+        while (index-- > 0)
+            curr = curr.next;
+
+        return curr.val;
+    }
+
+    public void addAtHead(int val) {
+
+        Node node = new Node(val);
+        node.next = head;
+        head = node;
+        size++;
+    }
+
+    public void addAtTail(int val) {
+
+        Node node = new Node(val);
+
+        if (head == null) {
+            head = node;
+        } else {
+
+            Node curr = head;
+
+            while (curr.next != null)
+                curr = curr.next;
+
+            curr.next = node;
+        }
+
+        size++;
+    }
+
+    public void addAtIndex(int index, int val) {
+
+        if (index > size)
+            return;
+
+        if (index == 0) {
+            addAtHead(val);
+            return;
+        }
+
+        Node curr = head;
+
+        for (int i = 0; i < index - 1; i++)
+            curr = curr.next;
+
+        Node node = new Node(val);
+
+        node.next = curr.next;
+        curr.next = node;
+        size++;
+    }
+
+    public void deleteAtIndex(int index) {
+
+        if (index < 0 || index >= size)
+            return;
+
+        if (index == 0) {
+            head = head.next;
+        } else {
+
+            Node curr = head;
+
+            for (int i = 0; i < index - 1; i++)
+                curr = curr.next;
+
+            curr.next = curr.next.next;
+        }
+
+        size--;
+    }
+}
+
+
+3. Reverse Linked List II (LeetCode)
+
+class Solution {
+
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+
+        if (head == null || left == right)
+            return head;
+
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+
+        ListNode prev = dummy;
+
+        for (int i = 1; i < left; i++)
+            prev = prev.next;
+
+        ListNode curr = prev.next;
+
+        for (int i = 0; i < right - left; i++) {
+
+            ListNode next = curr.next;
+            curr.next = next.next;
+            next.next = prev.next;
+            prev.next = next;
+        }
+
+        return dummy.next;
+    }
+}
+
+
+4. Reorder List (LeetCode)
+
+class Solution {
+
+    public void reorderList(ListNode head) {
+
+        if (head == null)
+            return;
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast.next != null && fast.next.next != null) {
+
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        ListNode second = reverse(slow.next);
+        slow.next = null;
+
+        ListNode first = head;
+
+        while (second != null) {
+
+            ListNode t1 = first.next;
+            ListNode t2 = second.next;
+
+            first.next = second;
+            second.next = t1;
+
+            first = t1;
+            second = t2;
+        }
+    }
+
+    private ListNode reverse(ListNode head) {
+
+        ListNode prev = null;
+
+        while (head != null) {
+
+            ListNode next = head.next;
+            head.next = prev;
+            prev = head;
+            head = next;
+        }
+
+        return prev;
+    }
+}
+
+
+5. Remove Nth Node From End of List (LeetCode)
+
+class Solution {
+
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+
+        ListNode fast = dummy;
+        ListNode slow = dummy;
+
+        for (int i = 0; i <= n; i++)
+            fast = fast.next;
+
+        while (fast != null) {
+
+            fast = fast.next;
+            slow = slow.next;
+        }
+
+        slow.next = slow.next.next;
+
+        return dummy.next;
+    }
+}
+
+
+                                                                   Hard
+
+1. Reverse Nodes in k-Group (LeetCode)
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+
+        ListNode curr = head;
+        int count = 0;
+
+        while (curr != null && count < k) {
+            curr = curr.next;
+            count++;
+        }
+
+        if (count == k) {
+
+            curr = reverseKGroup(curr, k);
+
+            while (count-- > 0) {
+                ListNode next = head.next;
+                head.next = curr;
+                curr = head;
+                head = next;
+            }
+
+            head = curr;
+        }
+
+        return head;
+    }
+}
+
+
+2. LFU Cache (LeetCode)
+
+import java.util.*;
+
+class LFUCache {
+
+    class Node {
+        int key, value, freq = 1;
+
+        Node(int k, int v) {
+            key = k;
+            value = v;
+        }
+    }
+
+    int capacity;
+    int minFreq;
+
+    Map<Integer, Node> nodeMap = new HashMap<>();
+    Map<Integer, LinkedHashSet<Integer>> freqMap = new HashMap<>();
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public int get(int key) {
+
+        if (!nodeMap.containsKey(key))
+            return -1;
+
+        update(key);
+        return nodeMap.get(key).value;
+    }
+
+    public void put(int key, int value) {
+
+        if (capacity == 0)
+            return;
+
+        if (nodeMap.containsKey(key)) {
+
+            nodeMap.get(key).value = value;
+            update(key);
+            return;
+        }
+
+        if (nodeMap.size() == capacity) {
+
+            int evict = freqMap.get(minFreq).iterator().next();
+            freqMap.get(minFreq).remove(evict);
+
+            if (freqMap.get(minFreq).isEmpty())
+                freqMap.remove(minFreq);
+
+            nodeMap.remove(evict);
+        }
+
+        Node node = new Node(key, value);
+
+        nodeMap.put(key, node);
+        minFreq = 1;
+
+        freqMap.computeIfAbsent(1, k -> new LinkedHashSet<>()).add(key);
+    }
+
+    private void update(int key) {
+
+        Node node = nodeMap.get(key);
+
+        int freq = node.freq;
+
+        freqMap.get(freq).remove(key);
+
+        if (freqMap.get(freq).isEmpty()) {
+
+            freqMap.remove(freq);
+
+            if (minFreq == freq)
+                minFreq++;
+        }
+
+        node.freq++;
+
+        freqMap.computeIfAbsent(node.freq,
+                k -> new LinkedHashSet<>()).add(key);
+    }
+}
+
+
+3. Merge k Sorted Lists (LeetCode)
+
+import java.util.PriorityQueue;
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+
+    public ListNode mergeKLists(ListNode[] lists) {
+
+        PriorityQueue<ListNode> pq =
+                new PriorityQueue<>((a, b) -> a.val - b.val);
+
+        for (ListNode node : lists) {
+            if (node != null)
+                pq.offer(node);
+        }
+
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+
+        while (!pq.isEmpty()) {
+
+            ListNode node = pq.poll();
+
+            tail.next = node;
+            tail = tail.next;
+
+            if (node.next != null)
+                pq.offer(node.next);
+        }
+
+        return dummy.next;
+    }
+}
