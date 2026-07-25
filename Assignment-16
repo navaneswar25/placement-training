@@ -1,0 +1,589 @@
+                                                                   Easy
+
+1. Next Greater Element I (LeetCode)
+
+import java.util.*;
+
+class Solution {
+
+    public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+
+        Map<Integer, Integer> map = new HashMap<>();
+        Stack<Integer> stack = new Stack<>();
+
+        for (int num : nums2) {
+
+            while (!stack.isEmpty() && stack.peek() < num)
+                map.put(stack.pop(), num);
+
+            stack.push(num);
+        }
+
+        while (!stack.isEmpty())
+            map.put(stack.pop(), -1);
+
+        int[] ans = new int[nums1.length];
+
+        for (int i = 0; i < nums1.length; i++)
+            ans[i] = map.get(nums1[i]);
+
+        return ans;
+    }
+}
+
+
+2. Valid Parentheses (LeetCode)
+
+import java.util.*;
+
+class Solution {
+
+    public boolean isValid(String s) {
+
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : s.toCharArray()) {
+
+            if (c == '(' || c == '{' || c == '[')
+                stack.push(c);
+            else {
+
+                if (stack.isEmpty())
+                    return false;
+
+                char top = stack.pop();
+
+                if ((c == ')' && top != '(') ||
+                    (c == '}' && top != '{') ||
+                    (c == ']' && top != '['))
+                    return false;
+            }
+        }
+
+        return stack.isEmpty();
+    }
+}
+
+
+3. Min Stack (LeetCode)
+
+import java.util.*;
+
+class MinStack {
+
+    Stack<Integer> stack;
+    Stack<Integer> minStack;
+
+    public MinStack() {
+        stack = new Stack<>();
+        minStack = new Stack<>();
+    }
+
+    public void push(int val) {
+
+        stack.push(val);
+
+        if (minStack.isEmpty() || val <= minStack.peek())
+            minStack.push(val);
+    }
+
+    public void pop() {
+
+        if (stack.pop().equals(minStack.peek()))
+            minStack.pop();
+    }
+
+    public int top() {
+        return stack.peek();
+    }
+
+    public int getMin() {
+        return minStack.peek();
+    }
+}
+
+
+4. Remove Outermost Parentheses (LeetCode)
+
+class Solution {
+
+    public String removeOuterParentheses(String s) {
+
+        StringBuilder ans = new StringBuilder();
+        int count = 0;
+
+        for (char c : s.toCharArray()) {
+
+            if (c == '(') {
+
+                if (count > 0)
+                    ans.append(c);
+
+                count++;
+            } else {
+
+                count--;
+
+                if (count > 0)
+                    ans.append(c);
+            }
+        }
+
+        return ans.toString();
+    }
+}
+
+
+5. Remove All Adjacent Duplicates in String (LeetCode)
+
+class Solution {
+
+    public String removeDuplicates(String s) {
+
+        StringBuilder sb = new StringBuilder();
+
+        for (char c : s.toCharArray()) {
+
+            int len = sb.length();
+
+            if (len > 0 && sb.charAt(len - 1) == c)
+                sb.deleteCharAt(len - 1);
+            else
+                sb.append(c);
+        }
+
+        return sb.toString();
+    }
+}
+
+
+6. Number of Recent Calls (LeetCode)
+
+import java.util.*;
+
+class RecentCounter {
+
+    Queue<Integer> queue;
+
+    public RecentCounter() {
+        queue = new LinkedList<>();
+    }
+
+    public int ping(int t) {
+
+        queue.offer(t);
+
+        while (queue.peek() < t - 3000)
+            queue.poll();
+
+        return queue.size();
+    }
+}
+
+
+                                                                     Medium
+
+1. Design a Stack With Increment Operation (LeetCode)
+
+class CustomStack {
+
+    int[] stack;
+    int top;
+
+    public CustomStack(int maxSize) {
+        stack = new int[maxSize];
+        top = -1;
+    }
+
+    public void push(int x) {
+        if (top != stack.length - 1)
+            stack[++top] = x;
+    }
+
+    public int pop() {
+        if (top == -1)
+            return -1;
+        return stack[top--];
+    }
+
+    public void increment(int k, int val) {
+        int limit = Math.min(k, top + 1);
+
+        for (int i = 0; i < limit; i++)
+            stack[i] += val;
+    }
+}
+
+
+2. Minimum Add to Make Parentheses Valid (LeetCode)
+
+class Solution {
+
+    public int minAddToMakeValid(String s) {
+
+        int open = 0;
+        int ans = 0;
+
+        for (char ch : s.toCharArray()) {
+
+            if (ch == '(')
+                open++;
+            else {
+
+                if (open > 0)
+                    open--;
+                else
+                    ans++;
+            }
+        }
+
+        return ans + open;
+    }
+}
+
+
+3. Decode String (LeetCode)
+
+import java.util.*;
+
+class Solution {
+
+    public String decodeString(String s) {
+
+        Stack<Integer> countStack = new Stack<>();
+        Stack<StringBuilder> stringStack = new Stack<>();
+
+        StringBuilder curr = new StringBuilder();
+        int num = 0;
+
+        for (char ch : s.toCharArray()) {
+
+            if (Character.isDigit(ch)) {
+
+                num = num * 10 + ch - '0';
+
+            } else if (ch == '[') {
+
+                countStack.push(num);
+                stringStack.push(curr);
+
+                curr = new StringBuilder();
+                num = 0;
+
+            } else if (ch == ']') {
+
+                int repeat = countStack.pop();
+                StringBuilder prev = stringStack.pop();
+
+                while (repeat-- > 0)
+                    prev.append(curr);
+
+                curr = prev;
+
+            } else {
+
+                curr.append(ch);
+            }
+        }
+
+        return curr.toString();
+    }
+}
+
+
+4. Asteroid Collision (LeetCode)
+
+import java.util.*;
+
+class Solution {
+
+    public int[] asteroidCollision(int[] asteroids) {
+
+        Stack<Integer> stack = new Stack<>();
+
+        for (int a : asteroids) {
+
+            boolean destroyed = false;
+
+            while (!stack.isEmpty() && a < 0 && stack.peek() > 0) {
+
+                if (stack.peek() < -a) {
+                    stack.pop();
+                    continue;
+                }
+
+                if (stack.peek() == -a)
+                    stack.pop();
+
+                destroyed = true;
+                break;
+            }
+
+            if (!destroyed)
+                stack.push(a);
+        }
+
+        int[] ans = new int[stack.size()];
+
+        for (int i = ans.length - 1; i >= 0; i--)
+            ans[i] = stack.pop();
+
+        return ans;
+    }
+}
+
+
+5. 132 Pattern (LeetCode)
+
+import java.util.*;
+
+class Solution {
+
+    public boolean find132pattern(int[] nums) {
+
+        Stack<Integer> stack = new Stack<>();
+        int third = Integer.MIN_VALUE;
+
+        for (int i = nums.length - 1; i >= 0; i--) {
+
+            if (nums[i] < third)
+                return true;
+
+            while (!stack.isEmpty() && nums[i] > stack.peek())
+                third = stack.pop();
+
+            stack.push(nums[i]);
+        }
+
+        return false;
+    }
+}
+
+
+6. Design Circular Queue (LeetCode)
+
+class MyCircularQueue {
+
+    int[] queue;
+    int front;
+    int rear;
+    int size;
+    int capacity;
+
+    public MyCircularQueue(int k) {
+        capacity = k;
+        queue = new int[k];
+        front = 0;
+        rear = -1;
+        size = 0;
+    }
+
+    public boolean enQueue(int value) {
+
+        if (isFull())
+            return false;
+
+        rear = (rear + 1) % capacity;
+        queue[rear] = value;
+        size++;
+
+        return true;
+    }
+
+    public boolean deQueue() {
+
+        if (isEmpty())
+            return false;
+
+        front = (front + 1) % capacity;
+        size--;
+
+        return true;
+    }
+
+    public int Front() {
+        return isEmpty() ? -1 : queue[front];
+    }
+
+    public int Rear() {
+        return isEmpty() ? -1 : queue[rear];
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean isFull() {
+        return size == capacity;
+    }
+}
+
+
+7. Find the Most Competitive Subsequence (LeetCode)
+
+import java.util.*;
+
+class Solution {
+
+    public int[] mostCompetitive(int[] nums, int k) {
+
+        Stack<Integer> stack = new Stack<>();
+
+        int remove = nums.length - k;
+
+        for (int num : nums) {
+
+            while (!stack.isEmpty() && remove > 0 && stack.peek() > num) {
+                stack.pop();
+                remove--;
+            }
+
+            stack.push(num);
+        }
+
+        while (remove-- > 0)
+            stack.pop();
+
+        int[] ans = new int[k];
+
+        for (int i = k - 1; i >= 0; i--)
+            ans[i] = stack.pop();
+
+        return ans;
+    }
+}
+
+
+                                                                      Hard
+
+1. Longest Valid Parentheses (LeetCode)
+
+import java.util.*;
+
+class Solution {
+
+    public int longestValidParentheses(String s) {
+
+        Stack<Integer> stack = new Stack<>();
+        stack.push(-1);
+
+        int max = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+
+            if (s.charAt(i) == '(') {
+
+                stack.push(i);
+
+            } else {
+
+                stack.pop();
+
+                if (stack.isEmpty()) {
+                    stack.push(i);
+                } else {
+                    max = Math.max(max, i - stack.peek());
+                }
+            }
+        }
+
+        return max;
+    }
+}
+
+
+2. Sliding Window Maximum (LeetCode)
+
+import java.util.*;
+
+class Solution {
+
+    public int[] maxSlidingWindow(int[] nums, int k) {
+
+        Deque<Integer> deque = new LinkedList<>();
+        int[] ans = new int[nums.length - k + 1];
+
+        int idx = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+
+            while (!deque.isEmpty() && deque.peekFirst() <= i - k)
+                deque.pollFirst();
+
+            while (!deque.isEmpty() && nums[deque.peekLast()] <= nums[i])
+                deque.pollLast();
+
+            deque.offerLast(i);
+
+            if (i >= k - 1)
+                ans[idx++] = nums[deque.peekFirst()];
+        }
+
+        return ans;
+    }
+}
+
+
+3. Brace Expansion II (LeetCode)
+
+import java.util.*;
+
+class Solution {
+
+    int i = 0;
+
+    public List<String> braceExpansionII(String expression) {
+
+        Set<String> result = parse(expression);
+        List<String> ans = new ArrayList<>(result);
+        Collections.sort(ans);
+
+        return ans;
+    }
+
+    private Set<String> parse(String s) {
+
+        Set<String> res = new TreeSet<>();
+        Set<String> cur = new TreeSet<>();
+        cur.add("");
+
+        while (i < s.length() && s.charAt(i) != '}') {
+
+            char ch = s.charAt(i);
+
+            if (ch == '{') {
+
+                i++;
+                Set<String> temp = parse(s);
+
+                Set<String> next = new TreeSet<>();
+
+                for (String a : cur)
+                    for (String b : temp)
+                        next.add(a + b);
+
+                cur = next;
+
+            } else if (Character.isLetter(ch)) {
+
+                Set<String> next = new TreeSet<>();
+
+                for (String a : cur)
+                    next.add(a + ch);
+
+                cur = next;
+
+            } else if (ch == ',') {
+
+                res.addAll(cur);
+                cur = new TreeSet<>();
+                cur.add("");
+            }
+
+            i++;
+        }
+
+        res.addAll(cur);
+        return res;
+    }
+}
